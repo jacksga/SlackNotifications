@@ -344,11 +344,16 @@ class SlackNotifications
 		if (!$wgSlackNotificationUserGroupsChanged) return;
 
 		global $wgSlackNotificationWikiUrl, $wgSlackNotificationWikiUrlEnding, $wgSlackNotificationWikiUrlEndingUserRights;
+		
+		$groupNames = implode(',', array_map(function($ugm) {
+                       return $ugm->getGroup();
+                }, $newUGMs));
+		
 		$message = sprintf(
             "%s has changed user groups for %s. New groups: %s",
 			self::getSlackUserText($performer),
 			self::getSlackUserText($user),
-			implode(", ", $user->getGroups()));
+			$groupNames);
 		self::push_slack_notify($message, "green", $user);
 		return true;
 	}
